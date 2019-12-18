@@ -2,16 +2,82 @@
 <head>
     <title>Online Chat!</title>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="/socket.io/socket.io.js"></script>
-
+    <link href="https://fonts.googleapis.com/css?family=Nunito&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a7219b3465.js" crossorigin="anonymous"></script>
     <style>
-        body {
-            margin-top: 30px;
-        }
-        
         #messageArea {
             display: none;
+        }
+
+        body {
+            margin-top: 30px;
+            font-family: 'Nunito', sans-serif;
+            margin-left: 10%;
+            margin-right: 10%;
+        }
+
+        #userForm {
+            color: #0080FF;
+            margin-left: 12em;
+            font-size: 40px;  
+            margin-top: 15%;
+        }
+
+        .btn {
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 16px;
+            padding: 8px 12px;
+            background-color: #0280FF;
+            border-radius: 15px;
+            width: 290px;
+        }
+
+        .btn:hover {
+            background-color: #3581B8;
+        }
+
+        .username-text-box {
+            height:40px;
+            width: 290px;
+            font-size:14pt;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .list-group-item {
+            list-style-type:none;
+            display: inline-block;
+        }
+
+        .fas.fa-signal {
+            color: #44bd5a;
+            }
+
+        .message-area {
+            font-size: 20px;
+            display: inline;
+        }
+
+        #message {
+            height:130px;
+            width: 350px;
+            font-size:14pt;
+            margin-top: 20px;
+            margin-bottom: 20px;
+        }
+
+        #chat {
+            position: absolute;
+            left: 40%;
+            margin-top: -25%;
+            padding-right: 10%;
+        }
+
+        .message-text {
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -19,39 +85,36 @@
 
 <body>
     <div class="container">
-        <div id="userFormArea" class="row">
-            <div class="col-md-12">
-                <form id="userForm">
+        <div id="userFormArea">
+            <form id="userForm">
                     <div class="form-group">
                         <label>Enter Username</label>
-                        <input class="form-control" id="username"/>
                         <br/>
-                        <input type="submit" class="btn btn-primary" value="Login"/>
+                        <input class="username-text-box" id="username"/>
+                        <br/>
+                        <input type="submit" class="btn" value="Login"/>
                     </div>
-                </form>
-            </div>
+            </form>
         </div>
 
-        <div class="row" id="messageArea">
-            <div class="col-md-4">
-                <div class="well">
-                    <h3>Users Online:</h3>
-                    <ul class="list-group" id="users"></ul>
-                </div>
+        <div class="message-area" id="messageArea">
+            <div class="well">
+                <h3>Users Online:</h3>
+                <ul class="list-group" id="users"></ul>
             </div>
-            <div class="col-md-8">
-                <div class="chat" id="chat">
-
+                <div class="chat">
                     <form id="messageForm">
                         <div class="form-group">
                             <label>Enter Message</label>
+                            <br/>
                             <textarea class="form-control" id="message"></textarea>
                             <br/>
-                            <input type="submit" class="btn btn-primary" value="Send Messge"/>
+                            <input type="submit" class="btn" value="Send Messge"/>
                         </div>
                     </form>
                 </div>
-            </div>
+                <div class="well" id="chat">
+                </div>
         </div>
     </div>
 
@@ -74,7 +137,7 @@
             });
 
             socket.on("new message", function(data){
-                $chat.append('<div class="well"><strong>'+data.user+'</strong>: '+data.msg+'</div>');
+                $chat.append('<div class="well message-text"><strong>'+data.user+'</strong>: '+data.msg+'</div>');
             });
 
             $userForm.submit(function(e) {
@@ -91,7 +154,7 @@
             socket.on("get users", function (data) {
                 var html = "";
                 for(i=0; i < data.length; i++) {
-                    html += '<li class="list-group-item">'+data[i]+'</li>';
+                    html += '<i class="fas fa-signal"></i> <li class="list-group-item">'+data[i]+'</li> <br/>';
                 };
                 $users.html(html);
             });
